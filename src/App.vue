@@ -1,60 +1,153 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+    <div class="test">
+      <ProgressBar :total="questions.length"
+                   :currentPoint="currentQuestion + 1"/>
+      <div class="question" v-if="!isEnd">
+        <div class="question-top">
+          <div class="question-text">
+            <span>#{{questions[currentQuestion].id + 1}}</span>
+            {{questions[currentQuestion].text}}
+          </div>
+          <Answers ref="answer"
+                   :items="questions[currentQuestion].answers"
+                   @changed="answerChanged"/>
+        </div>
+        <button :class="['button', 'question-answerButton', haveAnswer ? '' : 'question-answerButton-notAnswered']"
+                @click="answer">
+          Ответить
+        </button>
+      </div>
+      <div v-else class="question">
+        Вы набрали {{points}}
+        <button class="button question-startAgainButton"
+                @click="startAgain">
+          Начать заново
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import Answers from './components/Answers';
+import ProgressBar from './components/ProgressBar';
+import questions from './questions';
+
 export default {
-  name: 'app',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+    name: 'app',
+    data() {
+        return {
+            points: 0,
+            currentQuestion: 0,
+            currentAnswer: null,
+            questions: questions,
+            isEnd: false
+        }
+    },
+    methods: {
+        answer() {
+            if (this.currentAnswer === this.questions[this.currentQuestion].correctAnswer) {
+                this.points += 1;
+            }
+            if (this.haveAnswer) {
+                let nextQuestion = this.currentQuestion + 1;
+                if (nextQuestion < this.questions.length) {
+                    this.currentQuestion = nextQuestion;
+                } else {
+                    this.isEnd = true;
+                }
+            }
+        },
+        startAgain() {
+            this.currentQuestion = 0;
+            this.points = 0;
+            this.isEnd = false;
+        },
+        answerChanged(value) {
+            this.currentAnswer = value;
+        }
+    },
+    computed: {
+        haveAnswer() {
+            return !!this.currentAnswer;
+        }
+    },
+    components: {
+        Answers,
+        ProgressBar
     }
-  }
 }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
+<style lang="less">
+  html, body {
+    height: 100%;
+  }
+  body {
+    margin: 0;
+    /*background: linear-gradient(#e6646570, #9198e5);*/
+    /*background: linear-gradient(180grad, #75029e94, #2599fa, #31ffd9);*/
+    background: linear-gradient(180grad, #0c7ef4, #31ffd9);
+    font-family: Gilroy, Helvetica, Arial, sans-serif;
+  }
+  #app {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+  .test {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    border: 4px solid #ffffff6b;
+    border-radius: 14px;
+    padding: 12px;
+  }
+  .button {
+    height: 38px;
+    border-radius: 20px;
+    background-color: #dddddd;
+    border: unset;
+    cursor: pointer;
+    font-size: 18px;
+    color: white;
+    &:hover {
+      background-color: #cbc9c9;
+    }
+    &:focus {
+      outline: unset;
+    }
+  }
+  .question {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 286px;
+    background: white;
+    border-radius: 4px;
+    margin-top: 8px;
+    padding: 26px;
+    &-text {
+      height: 40px;
+      font-size: 28px;
+    }
+    &-answerButton {
+      width: 130px;
+      align-self: flex-end;
+      &-notAnswered {
+        cursor: not-allowed;
+        background-color: #ffdadac7;
+        &:hover {
+          background-color: #ffdadac7;
+        }
+      }
+    }
+    &-startAgainButton {
+      width: 200px;
+      align-self: center;
+    }
+  }
 </style>
