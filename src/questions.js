@@ -77,7 +77,7 @@ export default [
         value: 'Янцзы'
       }
     ],
-    correctAnswer: 1
+    correctAnswer: 2
   },
   {
     id: 4,

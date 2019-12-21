@@ -2,16 +2,16 @@
   <div id="app">
     <div class="test">
       <ProgressBar :total="questions.length"
-                   :currentPoint="questionsNumber"/>
+                   :currentPoint="questionNumber"/>
       <div class="question" v-if="!isEnd">
         <div class="question-top">
           <div class="question-text">
-            <span>#{{questionsNumber}}</span>
-            <span>{{questions[questionsNumber - 1].text}}</span>
+            <span>#{{questionNumber}}</span>
+            <span>{{questions[questionIndex].text}}</span>
           </div>
           <Answers ref="answer"
-                   :id="questionsNumber"
-                   :items="questions[questionsNumber - 1].answers"
+                   :id="questionNumber"
+                   :items="questions[questionIndex].answers"
                    @changed="answerChanged"/>
         </div>
         <button :class="['button', 'question-answerButton', this.currentAnswer ? '' : 'question-answerButton-notAnswered']"
@@ -19,8 +19,8 @@
           Ответить
         </button>
       </div>
-      <div v-else class="question">
-        Вы набрали {{points}}
+      <div v-else class="question question-end">
+        <span>Вы набрали {{points}} / {{this.questions.length}}</span>
         <button class="button question-startAgainButton"
                 @click="startAgain">
           Начать заново
@@ -34,41 +34,55 @@
 import Answers from './components/Answers';
 import ProgressBar from './components/ProgressBar';
 import questions from './questions';
+import {getRandom} from './helpers';
 
 export default {
     name: 'app',
     data() {
         return {
             points: 0,
-            questionsNumber: 1,
+            questionNumber: 1,
+            questionIndex: 0,
             currentAnswer: null,
             questions: questions,
-            isEnd: false
+            answered: []
         }
+    },
+    beforeMount() {
+        this.questionIndex = getRandom(0, this.questions.length - 1);
     },
     methods: {
         answer() {
             if (this.currentAnswer) {
-                let nextQuestion = this.questionsNumber + 1;
-                if (nextQuestion <= this.questions.length) {
-                    this.questionsNumber = nextQuestion;
-                } else {
-                    this.isEnd = true;
-                }
+                this.questionNumber += 1;
 
-                if (+this.currentAnswer === this.questions[this.questionsNumber - 1].correctAnswer) {
+                if (+this.currentAnswer === this.questions[this.questionIndex].correctAnswer) {
                     this.points += 1;
                 }
+
+                this.answered.push(this.questionIndex);
+                let nextIndex;
+
+                do {
+                    nextIndex = getRandom(0, this.questions.length - 1);
+                } while (this.answered.indexOf(nextIndex) !== -1 && !this.isEnd);
+
+                this.questionIndex = nextIndex;
             }
         },
         startAgain() {
-            this.questionsNumber = 1;
+            this.questionNumber = 1;
             this.points = 0;
-            this.isEnd = false;
+            this.answered = [];
         },
         answerChanged(value) {
             this.currentAnswer = value;
         }
+    },
+    computed: {
+      isEnd() {
+          return this.questions.length + 1 === this.questionNumber;
+      }
     },
     components: {
         Answers,
@@ -124,6 +138,10 @@ export default {
     background: #fff;
     border-radius: 4px;
     box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
+    &-end {
+      align-items: center;
+      justify-content: center;
+    }
     &-text {
       font-size: 28px;
       padding: 12px 0 24px;
@@ -143,7 +161,7 @@ export default {
     }
     &-startAgainButton {
       width: 200px;
-      align-self: center;
+      margin-top: 30px;
     }
   }
 </style>
