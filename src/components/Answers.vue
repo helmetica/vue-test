@@ -20,8 +20,9 @@
 <script>
     export default {
         props: {
-            name: {
-                type: String
+            id: {
+                type: Number,
+                default: 0
             },
             items: {
                 type: Array,
@@ -30,7 +31,8 @@
         },
         data() {
             return {
-                answer: ''
+                answer: '',
+                startId: null
             }
         },
         methods: {
@@ -38,10 +40,16 @@
                 this.$emit('changed', this.answer);
             }
         },
+        beforeMount() {
+            this.startId = this.$props.id;
+        },
         beforeUpdate() {
-            console.log(this.answer);
-            this.answer = '';
-            console.log(this.answer);
+            if (this.startId !== this.$props.id) {
+                this.startId = this.$props.id;
+                // сбросим выбранный radio для нового вопроса
+                this.answer = null;
+                this.changed();
+            }
         }
     }
 </script>

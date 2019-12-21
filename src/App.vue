@@ -10,6 +10,7 @@
             {{questions[currentQuestion].text}}
           </div>
           <Answers ref="answer"
+                   :id="currentQuestion"
                    :items="questions[currentQuestion].answers"
                    @changed="answerChanged"/>
         </div>
