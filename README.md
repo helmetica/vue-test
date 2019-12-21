@@ -2,7 +2,7 @@
 
 > A Vue.js project
 
-![скрин](https://github.com/helmetica/vue-test/raw/master/screens/screen1.PNG)
+![скрин](https://github.com/helmetica/vue-test/raw/master/screens/screen2.PNG)
 
 ## Build Setup
 
