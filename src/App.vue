@@ -2,19 +2,19 @@
   <div id="app">
     <div class="test">
       <ProgressBar :total="questions.length"
-                   :currentPoint="currentQuestion + 1"/>
+                   :currentPoint="questionsNumber"/>
       <div class="question" v-if="!isEnd">
         <div class="question-top">
           <div class="question-text">
-            <span>#{{questions[currentQuestion].id + 1}}</span>
-            {{questions[currentQuestion].text}}
+            <span>#{{questionsNumber}}</span>
+            <span>{{questions[questionsNumber - 1].text}}</span>
           </div>
           <Answers ref="answer"
-                   :id="currentQuestion"
-                   :items="questions[currentQuestion].answers"
+                   :id="questionsNumber"
+                   :items="questions[questionsNumber - 1].answers"
                    @changed="answerChanged"/>
         </div>
-        <button :class="['button', 'question-answerButton', haveAnswer ? '' : 'question-answerButton-notAnswered']"
+        <button :class="['button', 'question-answerButton', this.currentAnswer ? '' : 'question-answerButton-notAnswered']"
                 @click="answer">
           Ответить
         </button>
@@ -40,7 +40,7 @@ export default {
     data() {
         return {
             points: 0,
-            currentQuestion: 0,
+            questionsNumber: 1,
             currentAnswer: null,
             questions: questions,
             isEnd: false
@@ -48,30 +48,26 @@ export default {
     },
     methods: {
         answer() {
-            if (this.currentAnswer === this.questions[this.currentQuestion].correctAnswer) {
-                this.points += 1;
-            }
-            if (this.haveAnswer) {
-                let nextQuestion = this.currentQuestion + 1;
-                if (nextQuestion < this.questions.length) {
-                    this.currentQuestion = nextQuestion;
+            if (this.currentAnswer) {
+                let nextQuestion = this.questionsNumber + 1;
+                if (nextQuestion <= this.questions.length) {
+                    this.questionsNumber = nextQuestion;
                 } else {
                     this.isEnd = true;
+                }
+
+                if (+this.currentAnswer === this.questions[this.questionsNumber - 1].correctAnswer) {
+                    this.points += 1;
                 }
             }
         },
         startAgain() {
-            this.currentQuestion = 0;
+            this.questionsNumber = 1;
             this.points = 0;
             this.isEnd = false;
         },
         answerChanged(value) {
             this.currentAnswer = value;
-        }
-    },
-    computed: {
-        haveAnswer() {
-            return !!this.currentAnswer;
         }
     },
     components: {
@@ -122,17 +118,16 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 286px;
-    border-radius: 4px;
+    min-height: 286px;
     margin-top: 8px;
     padding: 26px;
     background: #fff;
     border-radius: 4px;
     box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
     &-text {
-      height: 40px;
       font-size: 28px;
-      padding: 12px 0;
+      padding: 12px 0 24px;
+      overflow-wrap: break-word;
       border-bottom: 1px solid #e7e8ec;
     }
     &-answerButton {

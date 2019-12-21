@@ -11,7 +11,7 @@
                :value="item.id"
                @change="changed">
         <span class="answers-item-radio"></span>
-        {{item.value}}
+        <span>{{item.value}}</span>
       </label>
     </div>
   </div>
@@ -55,6 +55,10 @@
 </script>
 
 <style lang="less" scoped>
+  @pink-color: #d62390;
+  @inner-di: 8px;
+  @outer-di: 14px;
+
   .answers {
     padding: 12px 0;
   }
@@ -74,10 +78,10 @@
       position: absolute;
       left: 5px;
       top: 5px;
-      height: 8px;
-      width: 8px;
+      height: @inner-di;
+      width: @inner-di;
       border-radius: 50%;
-      background: #d62390;
+      background: @pink-color;
     }
   }
   .answers-item-radio {
@@ -91,10 +95,10 @@
     &:after {
       content: '';
       display: block;
-      height: 14px;
-      width: 14px;
+      height: @outer-di;
+      width: @outer-di;
       border-radius: 50%;
-      border: 2px solid #d62390;
+      border: 2px solid @pink-color;
     }
   }
 </style>

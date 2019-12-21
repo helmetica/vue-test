@@ -2,7 +2,7 @@
   <div class="progressBar">
     <div class="progressBar-item"
          v-for="i in total">
-      <div :class="['progressBar-item-content', i <= currentPoint ? 'progressBar-item-answered' : '']"></div>
+      <div :class="['progressBar-item-content', i < currentPoint ? 'progressBar-item-answered' : '', i === currentPoint ? 'progressBar-item-current' : '']"></div>
     </div>
   </div>
 </template>
@@ -41,6 +41,9 @@
       }
       &-answered {
         background: #2d35ff9e;
+      }
+      &-current {
+        background: #2d35ff3d;
       }
     }
   }
