@@ -74,6 +74,7 @@ export default {
             this.questionNumber = 1;
             this.points = 0;
             this.answered = [];
+            this.currentAnswer = null;
         },
         answerChanged(value) {
             this.currentAnswer = value;
