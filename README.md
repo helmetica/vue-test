@@ -2,6 +2,8 @@
 
 > A Vue.js project
 
+![скрин](https://github.com/helmetica/vue-test/raw/master/screens/screen1.PNG)
+
 ## Build Setup
 
 ``` bash
