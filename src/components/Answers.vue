@@ -72,13 +72,12 @@
       content: '';
       display: block;
       position: absolute;
-      left: 4px;
-      top: 4px;
+      left: 5px;
+      top: 5px;
       height: 8px;
       width: 8px;
-      border: 1px solid #3988c9;
       border-radius: 50%;
-      background: #3988c9;
+      background: #d62390;
     }
   }
   .answers-item-radio {
@@ -94,8 +93,8 @@
       display: block;
       height: 14px;
       width: 14px;
-      border: 2px solid #3988c9;
       border-radius: 50%;
+      border: 2px solid #d62390;
     }
   }
 </style>

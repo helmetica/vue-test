@@ -87,10 +87,8 @@ export default {
   }
   body {
     margin: 0;
-    /*background: linear-gradient(#e6646570, #9198e5);*/
-    /*background: linear-gradient(180grad, #75029e94, #2599fa, #31ffd9);*/
-    background: linear-gradient(180grad, #0c7ef4, #31ffd9);
     font-family: Gilroy, Helvetica, Arial, sans-serif;
+    background: #edeef0;
   }
   #app {
     display: flex;
@@ -103,8 +101,6 @@ export default {
     display: flex;
     flex-direction: column;
     width: 60%;
-    border: 4px solid #ffffff6b;
-    border-radius: 14px;
     padding: 12px;
   }
   .button {
@@ -127,10 +123,12 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     height: 286px;
-    background: white;
     border-radius: 4px;
     margin-top: 8px;
     padding: 26px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
     &-text {
       height: 40px;
       font-size: 28px;
