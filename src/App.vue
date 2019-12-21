@@ -2,25 +2,25 @@
   <div id="app">
     <div class="test">
       <ProgressBar :total="questions.length"
-                   :currentPoint="currentQuestion + 1"/>
+                   :currentPoint="questionNumber"/>
       <div class="question" v-if="!isEnd">
         <div class="question-top">
           <div class="question-text">
-            <span>#{{questions[currentQuestion].id + 1}}</span>
-            {{questions[currentQuestion].text}}
+            <span>#{{questionNumber}}</span>
+            <span>{{questions[questionIndex].text}}</span>
           </div>
           <Answers ref="answer"
-                   :id="currentQuestion"
-                   :items="questions[currentQuestion].answers"
+                   :id="questionNumber"
+                   :items="questions[questionIndex].answers"
                    @changed="answerChanged"/>
         </div>
-        <button :class="['button', 'question-answerButton', haveAnswer ? '' : 'question-answerButton-notAnswered']"
+        <button :class="['button', 'question-answerButton', this.currentAnswer ? '' : 'question-answerButton-notAnswered']"
                 @click="answer">
           Ответить
         </button>
       </div>
-      <div v-else class="question">
-        Вы набрали {{points}}
+      <div v-else class="question question-end">
+        <span>Вы набрали {{points}} / {{this.questions.length}}</span>
         <button class="button question-startAgainButton"
                 @click="startAgain">
           Начать заново
@@ -34,45 +34,56 @@
 import Answers from './components/Answers';
 import ProgressBar from './components/ProgressBar';
 import questions from './questions';
+import {getRandom} from './helpers';
 
 export default {
     name: 'app',
     data() {
         return {
             points: 0,
-            currentQuestion: 0,
+            questionNumber: 1,
+            questionIndex: 0,
             currentAnswer: null,
             questions: questions,
-            isEnd: false
+            answered: []
         }
+    },
+    beforeMount() {
+        this.questionIndex = getRandom(0, this.questions.length - 1);
     },
     methods: {
         answer() {
-            if (this.currentAnswer === this.questions[this.currentQuestion].correctAnswer) {
-                this.points += 1;
-            }
-            if (this.haveAnswer) {
-                let nextQuestion = this.currentQuestion + 1;
-                if (nextQuestion < this.questions.length) {
-                    this.currentQuestion = nextQuestion;
-                } else {
-                    this.isEnd = true;
+            if (this.currentAnswer) {
+                this.questionNumber += 1;
+
+                if (+this.currentAnswer === this.questions[this.questionIndex].correctAnswer) {
+                    this.points += 1;
                 }
+
+                this.answered.push(this.questionIndex);
+                let nextIndex;
+
+                do {
+                    nextIndex = getRandom(0, this.questions.length - 1);
+                } while (this.answered.indexOf(nextIndex) !== -1 && !this.isEnd);
+
+                this.questionIndex = nextIndex;
             }
         },
         startAgain() {
-            this.currentQuestion = 0;
+            this.questionNumber = 1;
             this.points = 0;
-            this.isEnd = false;
+            this.answered = [];
+            this.currentAnswer = null;
         },
         answerChanged(value) {
             this.currentAnswer = value;
         }
     },
     computed: {
-        haveAnswer() {
-            return !!this.currentAnswer;
-        }
+      isEnd() {
+          return this.questions.length + 1 === this.questionNumber;
+      }
     },
     components: {
         Answers,
@@ -122,17 +133,20 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 286px;
-    border-radius: 4px;
+    min-height: 286px;
     margin-top: 8px;
     padding: 26px;
     background: #fff;
     border-radius: 4px;
     box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
+    &-end {
+      align-items: center;
+      justify-content: center;
+    }
     &-text {
-      height: 40px;
       font-size: 28px;
-      padding: 12px 0;
+      padding: 12px 0 24px;
+      overflow-wrap: break-word;
       border-bottom: 1px solid #e7e8ec;
     }
     &-answerButton {
@@ -148,7 +162,7 @@ export default {
     }
     &-startAgainButton {
       width: 200px;
-      align-self: center;
+      margin-top: 30px;
     }
   }
 </style>
