@@ -2,7 +2,7 @@
   <div class="progressBar">
     <div class="progressBar-item"
          v-for="i in total">
-      <div :class="['progressBar-item-content', i <= currentPoint ? 'progressBar-item-content-marked' : '']"></div>
+      <div :class="['progressBar-item-content', i <= currentPoint ? 'progressBar-item-answered' : '']"></div>
     </div>
   </div>
 </template>
@@ -29,18 +29,18 @@
 <style lang="less">
   .progressBar {
     display: flex;
-    height: 18px;
+    padding: 2px 4px;
     &-item {
-      flex-grow: 1;
-      padding: 2px;
+      margin-right: 6px;
       &-content {
-        width: 100%;
-        height: 100%;
-        border-radius: 4px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
         background: #dddddd;
-        &-marked {
-          background: #2d35ff7d;
-        }
+        box-shadow: inset 2px 2px 2px 2px rgba(0, 0, 0, 0.12);
+      }
+      &-answered {
+        background: #2d35ff9e;
       }
     }
   }
