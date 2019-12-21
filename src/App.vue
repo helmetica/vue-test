@@ -132,6 +132,8 @@ export default {
     &-text {
       height: 40px;
       font-size: 28px;
+      padding: 12px 0;
+      border-bottom: 1px solid #e7e8ec;
     }
     &-answerButton {
       width: 130px;

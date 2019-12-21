@@ -38,7 +38,6 @@
         border-radius: 50%;
         background: #dddddd;
         box-shadow: inset 2px 2px 2px 2px rgba(0, 0, 0, 0.12);
-        cursor: pointer;
       }
       &-answered {
         background: #2d35ff9e;
